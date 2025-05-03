@@ -1,0 +1,116 @@
+package com.voyagewise.trip.controller;
+
+import com.voyagewise.trip.dto.*;
+import com.voyagewise.trip.service.UserService;
+import javax.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+public class UserController {
+    private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody UserRegistrationRequest registrationRequest) {
+        return ResponseEntity.ok(userService.registerUser(registrationRequest));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UserResponse> loginUser(@Valid @RequestBody UserLoginRequest loginRequest) {
+        return ResponseEntity.ok(userService.loginUser(loginRequest));
+    }
+
+    @PostMapping("/activities")
+    public ResponseEntity<ActivityResponse> createActivity(@Valid @RequestBody ActivityRequest activityRequest) {
+        return ResponseEntity.ok(userService.createActivity(activityRequest));
+    }
+
+    @GetMapping("/activities")
+    public ResponseEntity<List<ActivityResponse>> getAllActivities() {
+        return ResponseEntity.ok(userService.getAllActivities());
+    }
+
+    @PostMapping("/trips")
+    public ResponseEntity<TripResponse> createTrip(@Valid @RequestBody TripRequest tripRequest, @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(userService.createTrip(tripRequest, userDetails.getUsername()));
+    }
+
+    @GetMapping("/trips")
+    public ResponseEntity<List<TripResponse>> getTripsByUser(@AuthenticationPrincipal UserDetails userDetails) {
+        System.out.println("Getting trips for user: " + userDetails.getUsername());
+        List<TripResponse> trips = userService.getTripsByUser(userDetails.getUsername());
+        System.out.println("Found " + trips.size() + " trips");
+        return ResponseEntity.ok()
+                .header("Access-Control-Allow-Origin", "http://localhost:3000")
+                .header("Access-Control-Allow-Credentials", "true")
+                .body(trips);
+    }
+
+    @GetMapping("/trips/{tripId}")
+    public ResponseEntity<TripResponse> getTripById(@PathVariable Long tripId) {
+        return ResponseEntity.ok(userService.getTripById(tripId));
+    }
+
+    @PostMapping("/itineraries")
+    public ResponseEntity<ItineraryResponse> createItinerary(@Valid @RequestBody ItineraryRequest itineraryRequest) {
+        return ResponseEntity.ok(userService.createItinerary(itineraryRequest));
+    }
+
+    @GetMapping("/trips/{tripId}/itinerary")
+    public ResponseEntity<ItineraryResponse> getItineraryByTripId(@PathVariable Long tripId) {
+        return ResponseEntity.ok(userService.getItineraryByTripId(tripId));
+    }
+
+    @PostMapping("/trip-blocks")
+    public ResponseEntity<TripBlockResponse> createTripBlock(@Valid @RequestBody TripBlockRequest tripBlockRequest) {
+        return ResponseEntity.ok(userService.createTripBlock(tripBlockRequest));
+    }
+
+    @PutMapping("/trip-blocks/{id}")
+    public ResponseEntity<TripBlockResponse> updateTripBlock(@PathVariable Long id, @Valid @RequestBody TripBlockRequest tripBlockRequest) {
+        return ResponseEntity.ok(userService.updateTripBlock(id, tripBlockRequest));
+    }
+
+    @DeleteMapping("/trip-blocks/{id}")
+    public ResponseEntity<Void> deleteTripBlock(@PathVariable Long id) {
+        userService.deleteTripBlock(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/itineraries/{itineraryId}/trip-blocks")
+    public ResponseEntity<List<TripBlockResponse>> getTripBlocksByItineraryId(@PathVariable Long itineraryId) {
+        return ResponseEntity.ok(userService.getTripBlocksByItineraryId(itineraryId));
+    }
+
+    @GetMapping("/trip-blocks/{id}")
+    public ResponseEntity<TripBlockResponse> getTripBlockById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getTripBlockById(id));
+    }
+
+    @GetMapping("/trip-blocks/{id}/activities")
+    public ResponseEntity<List<ActivityResponse>> getActivitiesByTripBlockId(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getActivitiesByTripBlockId(id));
+    }
+
+    @PutMapping("/activities/{id}")
+    public ResponseEntity<ActivityResponse> updateActivity(@PathVariable Long id, @Valid @RequestBody ActivityRequest activityRequest) {
+        return ResponseEntity.ok(userService.updateActivity(id, activityRequest));
+    }
+
+    @DeleteMapping("/activities/{id}")
+    public ResponseEntity<Void> deleteActivity(@PathVariable Long id) {
+        userService.deleteActivity(id);
+        return ResponseEntity.ok().build();
+    }
+} 
