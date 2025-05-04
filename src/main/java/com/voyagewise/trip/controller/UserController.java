@@ -8,17 +8,37 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.web.multipart.MultipartFile;
+import com.voyagewise.trip.model.ActivityCatalog;
+import com.voyagewise.trip.service.ActivityRecommendationService;
+import java.util.Map;
+import java.util.HashMap;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import com.voyagewise.trip.service.ActivityFilterService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class UserController {
     private final UserService userService;
+    private final ActivityRecommendationService activityRecommendationService;
+    private final ActivityFilterService activityFilterService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, 
+                         ActivityRecommendationService activityRecommendationService,
+                         ActivityFilterService activityFilterService) {
         this.userService = userService;
+        this.activityRecommendationService = activityRecommendationService;
+        this.activityFilterService = activityFilterService;
     }
 
     @PostMapping("/register")
@@ -37,8 +57,44 @@ public class UserController {
     }
 
     @GetMapping("/activities")
-    public ResponseEntity<List<ActivityResponse>> getAllActivities() {
-        return ResponseEntity.ok(userService.getAllActivities());
+    public ResponseEntity<Page<ActivityCatalog>> getActivities(
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) List<String> tags,
+            @RequestParam(required = false) Double minCost,
+            @RequestParam(required = false) Double maxCost,
+            @RequestParam(required = false) Integer minDuration,
+            @RequestParam(required = false) Integer maxDuration,
+            @RequestParam(required = false) Boolean isPopular,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "title") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection) {
+        
+        PageRequest pageable = PageRequest.of(page, size, 
+            Sort.by(Direction.fromString(sortDirection), sortBy));
+        
+        Page<ActivityCatalog> activities = activityRecommendationService.getFilteredActivities(
+            country, location, category, tags, minCost, maxCost, 
+            minDuration, maxDuration, isPopular, pageable);
+        
+        return ResponseEntity.ok(activities);
+    }
+
+    @GetMapping("/activities/categories")
+    public ResponseEntity<List<String>> getActivityCategories() {
+        return ResponseEntity.ok(activityFilterService.getCategories());
+    }
+
+    @GetMapping("/activities/cost-ranges")
+    public ResponseEntity<Map<String, Double>> getActivityCostRanges() {
+        return ResponseEntity.ok(activityFilterService.getCostRanges());
+    }
+
+    @GetMapping("/activities/duration-ranges")
+    public ResponseEntity<Map<String, Integer>> getActivityDurationRanges() {
+        return ResponseEntity.ok(activityFilterService.getDurationRanges());
     }
 
     @PostMapping("/trips")
@@ -113,4 +169,34 @@ public class UserController {
         userService.deleteActivity(id);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/admin/activities/upload")
+    public ResponseEntity<List<ActivityCatalog>> uploadActivities(@RequestParam("file") MultipartFile file) throws IOException {
+        List<ActivityCatalog> activities = activityRecommendationService.ingestActivitiesFromCSV(file);
+        return ResponseEntity.ok(activities);
+    }
+
+    @GetMapping("/activities/recommendations")
+    public ResponseEntity<List<ActivityCatalog>> getRecommendations(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) Boolean popular) {
+        List<ActivityCatalog> recommendations = activityRecommendationService.getRecommendations(category, location, country, popular);
+        return ResponseEntity.ok(recommendations);
+    }
+
+    @GetMapping("/activities/filters")
+    public ResponseEntity<Map<String, List<String>>> getActivityFilters() {
+        return ResponseEntity.ok(activityFilterService.getFilterOptions());
+    }
+
+    @GetMapping("/users/me")
+    public ResponseEntity<User> getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = userService.findByEmail(email);
+        return ResponseEntity.ok(user);
+    }
+
 } 

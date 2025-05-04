@@ -24,6 +24,9 @@ public class User {
     @Column
     private String fullName;
 
+    @Column
+    private String role = "USER"; // Default role is USER
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Trip> trips;
 } 
