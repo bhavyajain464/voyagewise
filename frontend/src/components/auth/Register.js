@@ -1,119 +1,185 @@
 import React, { useState } from 'react';
-import { Box, Button, Card, CardContent, TextField, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Container,
+  Paper,
+  Alert,
+} from '@mui/material';
+import AuthBackground from './AuthBackground';
 
 const Register = () => {
   const [formData, setFormData] = useState({
     username: '',
-    password: '',
     email: '',
+    password: '',
+    confirmPassword: '',
     fullName: '',
   });
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
     try {
-      const response = await fetch('http://localhost:8080/api/register', {
+      const response = await fetch('/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+          fullName: formData.fullName,
+        }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        navigate('/login');
+        navigate('/login', { state: { message: 'Registration successful! Please login.' } });
       } else {
-        // Handle error
-        console.error('Registration failed');
+        setError(data.message || 'Registration failed');
       }
     } catch (error) {
-      console.error('Error:', error);
+      setError('An error occurred during registration');
     }
   };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh',
-        backgroundColor: 'background.default',
-      }}
-    >
-      <Card sx={{ maxWidth: 400, width: '100%', m: 2 }}>
-        <CardContent>
-          <Typography variant="h4" component="h1" gutterBottom align="center">
-            Register for VoyageWise
-          </Typography>
-          <form onSubmit={handleSubmit}>
-            <TextField
-              fullWidth
-              label="Username"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              margin="normal"
-              required
-            />
-            <TextField
-              fullWidth
-              label="Password"
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
-              margin="normal"
-              required
-            />
-            <TextField
-              fullWidth
-              label="Email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              margin="normal"
-              required
-            />
-            <TextField
-              fullWidth
-              label="Full Name"
-              name="fullName"
-              value={formData.fullName}
-              onChange={handleChange}
-              margin="normal"
-              required
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Register
-            </Button>
-            <Button
-              fullWidth
-              variant="text"
-              onClick={() => navigate('/login')}
-            >
-              Already have an account? Login
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-    </Box>
+    <AuthBackground>
+      <Container component="main" maxWidth="xs">
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Paper 
+            elevation={3} 
+            sx={{ 
+              p: 4, 
+              width: '100%',
+              backgroundColor: 'rgba(255, 255, 255, 0.95)',
+              backdropFilter: 'blur(10px)',
+            }}
+          >
+            <Typography component="h1" variant="h5" align="center" gutterBottom>
+              Join VoyageWise
+            </Typography>
+            <Typography variant="body2" color="text.secondary" align="center" sx={{ mb: 3 }}>
+              Start planning your adventures
+            </Typography>
+            {error && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {error}
+              </Alert>
+            )}
+            <Box component="form" onSubmit={handleSubmit} noValidate>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="username"
+                label="Username"
+                name="username"
+                autoComplete="username"
+                autoFocus
+                value={formData.username}
+                onChange={handleChange}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="fullName"
+                label="Full Name"
+                name="fullName"
+                autoComplete="name"
+                value={formData.fullName}
+                onChange={handleChange}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="new-password"
+                value={formData.password}
+                onChange={handleChange}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="confirmPassword"
+                label="Confirm Password"
+                type="password"
+                id="confirmPassword"
+                autoComplete="new-password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Register
+              </Button>
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography variant="body2" color="text.secondary">
+                  Already have an account?{' '}
+                  <Button
+                    component={Link}
+                    to="/login"
+                    variant="text"
+                    color="primary"
+                  >
+                    Login here
+                  </Button>
+                </Typography>
+              </Box>
+            </Box>
+          </Paper>
+        </Box>
+      </Container>
+    </AuthBackground>
   );
 };
 

@@ -15,13 +15,14 @@ import {
   IconButton,
   Collapse,
 } from '@mui/material';
-import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon, ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon, ArrowForward as ArrowForwardIcon } from '@mui/icons-material';
+import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon, ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon, ArrowForward as ArrowForwardIcon, CalendarMonth as CalendarMonthIcon } from '@mui/icons-material';
 import dayjs from 'dayjs';
 import ActivityForm from './ActivityForm';
 import ItineraryForm from './ItineraryForm';
 import TripBlockForm from './TripBlockForm';
 import { format } from 'date-fns';
 import TripBlockDetail from './TripBlockDetail';
+import TripCalendar from './TripCalendar';
 
 const TripDetail = () => {
   const { id } = useParams();
@@ -37,6 +38,7 @@ const TripDetail = () => {
   const [editingActivity, setEditingActivity] = useState(null);
   const [expandedTripBlocks, setExpandedTripBlocks] = useState({});
   const [currentTripBlockId, setCurrentTripBlockId] = useState(null);
+  const [showCalendar, setShowCalendar] = useState(false);
 
   const fetchTripData = async () => {
     try {
@@ -158,26 +160,38 @@ const TripDetail = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Card>
-        <CardContent>
-          <Typography variant="h4" gutterBottom>
-            {trip.title}
-          </Typography>
-          <Typography variant="body1" paragraph>
-            {trip.description}
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <Typography variant="subtitle2">Start Date</Typography>
-              <Typography>{format(new Date(trip.startDate), 'MMM dd, yyyy')}</Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="subtitle2">End Date</Typography>
-              <Typography>{format(new Date(trip.endDate), 'MMM dd, yyyy')}</Typography>
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
+      {trip && (
+        <Card sx={{ mb: 3 }}>
+          <CardContent>
+            <Typography variant="h4" gutterBottom>
+              {trip.title}
+            </Typography>
+            <Typography variant="body1" paragraph>
+              {trip.description}
+            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography variant="subtitle1" color="text.secondary">
+                {format(new Date(trip.startDate), 'PP')} - {format(new Date(trip.endDate), 'PP')}
+              </Typography>
+              {itinerary && (
+                <Button
+                  variant="outlined"
+                  startIcon={<CalendarMonthIcon />}
+                  onClick={() => setShowCalendar(!showCalendar)}
+                >
+                  {showCalendar ? 'Hide Calendar' : 'Show Calendar'}
+                </Button>
+              )}
+            </Box>
+          </CardContent>
+        </Card>
+      )}
+
+      {showCalendar && tripBlocks.length > 0 && (
+        <Box sx={{ mb: 3 }}>
+          <TripCalendar tripBlocks={tripBlocks} />
+        </Box>
+      )}
 
       {!itinerary && (
         <Box sx={{ mt: 3 }}>
