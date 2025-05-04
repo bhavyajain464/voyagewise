@@ -23,6 +23,7 @@ export const AuthProvider = ({ children }) => {
         // Decode the JWT token to get user info
         const decodedToken = jwtDecode(token);
         setUser({
+          id: decodedToken.id,
           email: decodedToken.sub,
           role: decodedToken.role || 'USER'
         });
@@ -38,10 +39,10 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  const login = async (email, password) => {
+  const login = async (username, password) => {
     try {
-      const response = await axios.post('http://localhost:8080/api/auth/login', {
-        email,
+      const response = await axios.post('http://localhost:8080/api/login', {
+        username,
         password
       });
       
@@ -51,12 +52,14 @@ export const AuthProvider = ({ children }) => {
       
       // Decode token to get user info
       const decodedToken = jwtDecode(token);
-      setUser({
+      const userData = {
+        id: decodedToken.id,
         email: decodedToken.sub,
         role: decodedToken.role || 'USER'
-      });
+      };
+      setUser(userData);
       
-      return decodedToken;
+      return userData;
     } catch (error) {
       throw error;
     }

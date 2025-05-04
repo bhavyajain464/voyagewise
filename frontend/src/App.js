@@ -15,6 +15,7 @@ import TripBlockDetail from './components/trips/TripBlockDetail';
 import ActivityUpload from './components/admin/ActivityUpload';
 import AdminDashboard from './components/admin/AdminDashboard';
 import ActivityRecommendations from './components/activities/ActivityRecommendations';
+import Profile from './components/profile/Profile';
 
 const theme = createTheme({
   palette: {
@@ -78,6 +79,7 @@ const App = () => {
                 <Route path="activities" element={<PrivateRoute><ActivityRecommendations /></PrivateRoute>} />
                 <Route path="admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
                 <Route path="admin/upload" element={<AdminRoute><ActivityUpload /></AdminRoute>} />
+                <Route path="profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
               </Route>
             </Routes>
           </Router>

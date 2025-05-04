@@ -40,6 +40,12 @@ public class JwtService {
             .map(grantedAuthority -> grantedAuthority.getAuthority().replace("ROLE_", ""))
             .orElse("USER");
         claims.put("role", role);
+        
+        // Add user ID to claims if available
+        if (userDetails instanceof CustomUserDetails) {
+            claims.put("id", ((CustomUserDetails) userDetails).getUserId());
+        }
+        
         return generateToken(claims, userDetails);
     }
 

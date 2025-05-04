@@ -23,6 +23,9 @@ import org.springframework.data.domain.Sort.Direction;
 import com.voyagewise.trip.service.ActivityFilterService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import com.voyagewise.trip.service.ProfileService;
+import java.security.Principal;
+import com.voyagewise.trip.security.CustomUserDetails;
 
 @RestController
 @RequestMapping("/api")
@@ -31,14 +34,17 @@ public class UserController {
     private final UserService userService;
     private final ActivityRecommendationService activityRecommendationService;
     private final ActivityFilterService activityFilterService;
+    private final ProfileService profileService;
 
     @Autowired
     public UserController(UserService userService, 
                          ActivityRecommendationService activityRecommendationService,
-                         ActivityFilterService activityFilterService) {
+                         ActivityFilterService activityFilterService,
+                         ProfileService profileService) {
         this.userService = userService;
         this.activityRecommendationService = activityRecommendationService;
         this.activityFilterService = activityFilterService;
+        this.profileService = profileService;
     }
 
     @PostMapping("/register")
@@ -189,6 +195,73 @@ public class UserController {
     @GetMapping("/activities/filters")
     public ResponseEntity<Map<String, List<String>>> getActivityFilters() {
         return ResponseEntity.ok(activityFilterService.getFilterOptions());
+    }
+
+    @GetMapping("/users/{userId}/profile")
+    public ResponseEntity<ProfileResponse> getProfile(@PathVariable Long userId, Principal principal) {
+        // Get the current user's ID from the security context
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            // Verify that the requesting user has access to this profile
+            if (!userDetails.getUserId().equals(userId)) {
+                return ResponseEntity.status(403).build();
+            }
+            return ResponseEntity.ok(profileService.getProfile(userId));
+        }
+        return ResponseEntity.status(403).build();
+    }
+
+    @PutMapping("/users/{userId}/profile")
+    public ResponseEntity<ProfileResponse> updateProfile(
+            @PathVariable Long userId,
+            @Valid @RequestBody ProfileUpdateRequest request,
+            Principal principal) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            // Verify that the requesting user has access to this profile
+            if (!userDetails.getUserId().equals(userId)) {
+                return ResponseEntity.status(403).build();
+            }
+            return ResponseEntity.ok(profileService.updateProfile(userId, request));
+        }
+        return ResponseEntity.status(403).build();
+    }
+
+    @PostMapping("/users/{userId}/photos")
+    public ResponseEntity<PhotoResponse> uploadPhoto(
+            @PathVariable Long userId,
+            @RequestParam("file") MultipartFile file,
+            Principal principal) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            // Verify that the requesting user has access to this profile
+            if (!userDetails.getUserId().equals(userId)) {
+                return ResponseEntity.status(403).build();
+            }
+            return ResponseEntity.ok(profileService.uploadPhoto(userId, file));
+        }
+        return ResponseEntity.status(403).build();
+    }
+
+    @DeleteMapping("/users/{userId}/photos/{photoId}")
+    public ResponseEntity<Void> deletePhoto(
+            @PathVariable Long userId,
+            @PathVariable Long photoId,
+            Principal principal) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            // Verify that the requesting user has access to this profile
+            if (!userDetails.getUserId().equals(userId)) {
+                return ResponseEntity.status(403).build();
+            }
+            profileService.deletePhoto(userId, photoId);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(403).build();
     }
 
     // @GetMapping("/users/me")

@@ -10,6 +10,7 @@ import {
   Alert,
 } from '@mui/material';
 import AuthBackground from './AuthBackground';
+import { useAuth } from '../../context/AuthContext';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -17,45 +18,18 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    console.log('Attempting login with username:', username);
 
     try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
-      console.log('Login response status:', response.status);
-      const data = await response.json();
-      console.log('Login response data:', data);
-
-      if (response.ok && data.token) {
-        console.log('Login successful, storing token:', data.token);
-        localStorage.setItem('token', data.token);
-        
-        // Extract role from token payload
-        const tokenPayload = JSON.parse(atob(data.token.split('.')[1]));
-        const isAdmin = tokenPayload.role === 'ADMIN';
-        const defaultPath = isAdmin ? '/admin' : '/trips';
-        
-        // Get the redirect path from location state or use default based on role
-        const from = location.state?.from?.pathname || defaultPath;
-        console.log('Redirecting to:', from);
-        navigate(from, { replace: true });
-      } else {
-        console.error('Login failed:', data.message || 'Invalid credentials');
-        setError(data.message || 'Invalid credentials');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      setError('An error occurred during login');
+      await login(username, password);
+      const from = location.state?.from?.pathname || '/trips';
+      navigate(from, { replace: true });
+    } catch (err) {
+      setError(err.response?.data?.message || 'Invalid credentials');
     }
   };
 
