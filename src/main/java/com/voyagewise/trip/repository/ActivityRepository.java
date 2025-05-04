@@ -10,4 +10,5 @@ import java.util.List;
 public interface ActivityRepository extends JpaRepository<Activity, Long> {
     List<Activity> findByTripBlock(TripBlock tripBlock);
     List<Activity> findByTripBlockId(Long tripBlockId);
+    List<Activity> findByTripBlockOrderByStartTimeAsc(TripBlock tripBlock);
 } 

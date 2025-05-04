@@ -39,8 +39,13 @@ const Login = () => {
         console.log('Login successful, storing token:', data.token);
         localStorage.setItem('token', data.token);
         
-        // Get the redirect path from location state or default to /trips
-        const from = location.state?.from?.pathname || '/trips';
+        // Extract role from token payload
+        const tokenPayload = JSON.parse(atob(data.token.split('.')[1]));
+        const isAdmin = tokenPayload.role === 'ADMIN';
+        const defaultPath = isAdmin ? '/admin' : '/trips';
+        
+        // Get the redirect path from location state or use default based on role
+        const from = location.state?.from?.pathname || defaultPath;
         console.log('Redirecting to:', from);
         navigate(from, { replace: true });
       } else {

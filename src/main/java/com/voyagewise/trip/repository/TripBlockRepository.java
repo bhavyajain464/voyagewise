@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface TripBlockRepository extends JpaRepository<TripBlock, Long> {
     List<TripBlock> findByItineraryId(Long itineraryId);
+    List<TripBlock> findByItineraryIdOrderByStartTimeAsc(Long itineraryId);
 } 

@@ -113,7 +113,7 @@ public class UserService {
         Itinerary itinerary = itineraryRepository.findByTripId(tripId).orElse(null);
         if (itinerary != null) {
             // Fetch trip blocks with activities
-            List<TripBlock> tripBlocks = tripBlockRepository.findByItineraryId(itinerary.getId());
+            List<TripBlock> tripBlocks = tripBlockRepository.findByItineraryIdOrderByStartTimeAsc(itinerary.getId());
             for (TripBlock tripBlock : tripBlocks) {
                 // Fetch activities for each trip block
                 tripBlock.getActivities().size();
@@ -164,7 +164,7 @@ public class UserService {
     }
 
     public List<TripBlockResponse> getTripBlocksByItineraryId(Long itineraryId) {
-        return tripBlockRepository.findByItineraryId(itineraryId).stream()
+        return tripBlockRepository.findByItineraryIdOrderByStartTimeAsc(itineraryId).stream()
                 .map(tripBlock -> {
                     // Eagerly fetch activities
                     tripBlock.getActivities().size();
@@ -201,7 +201,7 @@ public class UserService {
         TripBlock tripBlock = tripBlockRepository.findById(tripBlockId)
                 .orElseThrow(() -> new NotFoundException("Trip block not found"));
         
-        return activityRepository.findByTripBlock(tripBlock).stream()
+        return activityRepository.findByTripBlockOrderByStartTimeAsc(tripBlock).stream()
                 .map(dtoMapper::toActivityResponse)
                 .collect(Collectors.toList());
     }

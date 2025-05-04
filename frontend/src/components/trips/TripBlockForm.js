@@ -71,21 +71,29 @@ const TripBlockForm = ({ open, onClose, itineraryId, onSuccess, tripBlock }) => 
       
       const method = tripBlock ? 'PUT' : 'POST';
 
+      const requestBody = {
+        title: formData.title,
+        description: formData.description,
+        startTime: formData.startTime.toISOString(),
+        endTime: formData.endTime.toISOString(),
+        location: formData.location,
+        country: formData.country,
+      };
+
+      // Add itineraryId only if it's provided (for create) or use the existing one (for update)
+      if (tripBlock) {
+        requestBody.itineraryId = tripBlock.itineraryId;
+      } else if (itineraryId) {
+        requestBody.itineraryId = itineraryId;
+      }
+
       const response = await fetch(url, {
         method,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify({
-          itineraryId: itineraryId,
-          title: formData.title,
-          description: formData.description,
-          startTime: formData.startTime.toISOString(),
-          endTime: formData.endTime.toISOString(),
-          location: formData.location,
-          country: formData.country,
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
@@ -96,6 +104,7 @@ const TripBlockForm = ({ open, onClose, itineraryId, onSuccess, tripBlock }) => 
       onSuccess();
     } catch (error) {
       console.error('Error:', error);
+      alert(error.message);
     }
   };
 

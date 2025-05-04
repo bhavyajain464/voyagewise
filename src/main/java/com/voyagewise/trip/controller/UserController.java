@@ -191,12 +191,12 @@ public class UserController {
         return ResponseEntity.ok(activityFilterService.getFilterOptions());
     }
 
-    @GetMapping("/users/me")
-    public ResponseEntity<User> getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        User user = userService.findByEmail(email);
-        return ResponseEntity.ok(user);
-    }
+    // @GetMapping("/users/me")
+    // public ResponseEntity<User> getCurrentUser() {
+    //     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    //     String email = authentication.getName();
+    //     User user = userService.findByEmail(email);
+    //     return ResponseEntity.ok(user);
+    // }
 
 } 

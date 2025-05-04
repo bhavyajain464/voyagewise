@@ -36,5 +36,6 @@ public class TripBlock {
     private String country;  // Country for this segment
 
     @OneToMany(mappedBy = "tripBlock", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OrderBy("startTime ASC")
     private List<Activity> activities;  // Activities within this segment
 } 

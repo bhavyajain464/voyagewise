@@ -236,7 +236,7 @@ const TripBlockDetail = ({ tripBlock, onUpdate, onDelete }) => {
                               {activity.location} - {activity.category}
                             </Typography>
                             <br />
-                            {format(new Date(activity.startTime), 'p')} - {format(new Date(activity.endTime), 'p')}
+                            {format(new Date(activity.startTime), 'PPp')} - {format(new Date(activity.endTime), 'PPp')}
                             <br />
                             {activity.description}
                           </>

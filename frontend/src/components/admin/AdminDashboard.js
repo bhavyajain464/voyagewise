@@ -22,7 +22,7 @@ const AdminDashboard = () => {
               variant="contained"
               color="primary"
               component={Link}
-              to="/admin/activities"
+              to="/admin/upload"
               sx={{ mt: 2 }}
             >
               Upload Activities
