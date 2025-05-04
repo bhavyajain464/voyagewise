@@ -21,6 +21,7 @@ import ActivityForm from './ActivityForm';
 import ItineraryForm from './ItineraryForm';
 import TripBlockForm from './TripBlockForm';
 import { format } from 'date-fns';
+import TripBlockDetail from './TripBlockDetail';
 
 const TripDetail = () => {
   const { id } = useParams();
@@ -34,7 +35,6 @@ const TripDetail = () => {
   const [itineraryFormOpen, setItineraryFormOpen] = useState(false);
   const [tripBlockFormOpen, setTripBlockFormOpen] = useState(false);
   const [editingActivity, setEditingActivity] = useState(null);
-  const [editingTripBlock, setEditingTripBlock] = useState(null);
   const [expandedTripBlocks, setExpandedTripBlocks] = useState({});
   const [currentTripBlockId, setCurrentTripBlockId] = useState(null);
 
@@ -102,38 +102,16 @@ const TripDetail = () => {
     fetchTripData();
   };
 
-  const handleActivityCreated = () => {
+  const handleTripBlockUpdated = () => {
     fetchTripData();
   };
 
-  const handleEditTripBlock = (tripBlock) => {
-    setEditingTripBlock(tripBlock);
-    setTripBlockFormOpen(true);
+  const handleTripBlockDeleted = () => {
+    fetchTripData();
   };
 
-  const handleDeleteTripBlock = async (tripBlockId) => {
-    if (!window.confirm('Are you sure you want to delete this trip block? This will also delete all associated activities.')) {
-      return;
-    }
-
-    try {
-      const response = await fetch(`/api/trip-blocks/${tripBlockId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to delete trip block');
-      }
-
-      fetchTripData();
-    } catch (error) {
-      console.error('Error deleting trip block:', error);
-      alert(error.message || 'Failed to delete trip block');
-    }
+  const handleActivityCreated = () => {
+    fetchTripData();
   };
 
   const handleEditActivity = (activity) => {
@@ -231,88 +209,12 @@ const TripDetail = () => {
           ) : (
             <List>
               {tripBlocks.map((tripBlock) => (
-                <Paper key={tripBlock.id} sx={{ mb: 2 }}>
-                  <ListItem
-                    secondaryAction={
-                      <Box>
-                        <IconButton
-                          edge="end"
-                          aria-label="edit"
-                          onClick={() => handleEditTripBlock(tripBlock)}
-                        >
-                          <EditIcon />
-                        </IconButton>
-                        <IconButton
-                          edge="end"
-                          aria-label="delete"
-                          onClick={() => handleDeleteTripBlock(tripBlock.id)}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                        <IconButton
-                          edge="end"
-                          aria-label="expand"
-                          onClick={() => toggleTripBlock(tripBlock.id)}
-                        >
-                          {expandedTripBlocks[tripBlock.id] ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                        </IconButton>
-                      </Box>
-                    }
-                  >
-                    <ListItemText
-                      primary={tripBlock.title}
-                      secondary={`${format(new Date(tripBlock.startTime), 'MMM dd, yyyy h:mm a')} - ${format(new Date(tripBlock.endTime), 'MMM dd, yyyy h:mm a')}`}
-                    />
-                  </ListItem>
-                  <Collapse in={expandedTripBlocks[tripBlock.id]}>
-                    <Box sx={{ pl: 2, pr: 2, pb: 2 }}>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-                        <Typography variant="subtitle1">Activities</Typography>
-                        <Button
-                          size="small"
-                          startIcon={<AddIcon />}
-                          onClick={() => handleAddActivity(tripBlock.id)}
-                        >
-                          Add Activity
-                        </Button>
-                      </Box>
-                      {tripBlock.activities && tripBlock.activities.length > 0 ? (
-                        <List>
-                          {tripBlock.activities.map((activity) => (
-                            <ListItem
-                              key={activity.id}
-                              secondaryAction={
-                                <Box>
-                                  <IconButton
-                                    edge="end"
-                                    aria-label="edit"
-                                    onClick={() => handleEditActivity(activity)}
-                                  >
-                                    <EditIcon />
-                                  </IconButton>
-                                  <IconButton
-                                    edge="end"
-                                    aria-label="delete"
-                                    onClick={() => handleDeleteActivity(activity.id)}
-                                  >
-                                    <DeleteIcon />
-                                  </IconButton>
-                                </Box>
-                              }
-                            >
-                              <ListItemText
-                                primary={activity.title}
-                                secondary={`${format(new Date(activity.startTime), 'h:mm a')} - ${format(new Date(activity.endTime), 'h:mm a')}`}
-                              />
-                            </ListItem>
-                          ))}
-                        </List>
-                      ) : (
-                        <Typography>No activities yet. Add one to get started!</Typography>
-                      )}
-                    </Box>
-                  </Collapse>
-                </Paper>
+                <TripBlockDetail
+                  key={tripBlock.id}
+                  tripBlock={tripBlock}
+                  onUpdate={handleTripBlockUpdated}
+                  onDelete={handleTripBlockDeleted}
+                />
               ))}
             </List>
           )}
@@ -330,7 +232,6 @@ const TripDetail = () => {
         open={tripBlockFormOpen}
         onClose={() => setTripBlockFormOpen(false)}
         itineraryId={itinerary?.id}
-        tripBlock={editingTripBlock}
         onSuccess={handleTripBlockCreated}
       />
 

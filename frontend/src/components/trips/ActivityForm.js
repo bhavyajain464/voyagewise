@@ -65,10 +65,12 @@ const ActivityForm = ({ open, onClose, tripBlockId, activity, onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = activity 
+      const url = activity && !activity.isNew 
         ? `/api/activities/${activity.id}`
         : '/api/activities';
       
+      const method = activity && !activity.isNew ? 'PUT' : 'POST';
+
       console.log('Submitting activity form:', {
         ...formData,
         tripBlockId,
@@ -77,7 +79,7 @@ const ActivityForm = ({ open, onClose, tripBlockId, activity, onSuccess }) => {
       });
 
       const response = await fetch(url, {
-        method: activity ? 'PUT' : 'POST',
+        method,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -116,7 +118,7 @@ const ActivityForm = ({ open, onClose, tripBlockId, activity, onSuccess }) => {
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>
-        {activity ? 'Edit Activity' : 'Add Activity'}
+        {activity && !activity.isNew ? 'Edit Activity' : 'Add Activity'}
       </DialogTitle>
       <DialogContent>
         <Box sx={{ mt: 2 }}>
@@ -192,7 +194,7 @@ const ActivityForm = ({ open, onClose, tripBlockId, activity, onSuccess }) => {
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
         <Button onClick={handleSubmit} variant="contained" color="primary">
-          {activity ? 'Update' : 'Create'}
+          {activity && !activity.isNew ? 'Update' : 'Create'}
         </Button>
       </DialogActions>
     </Dialog>
