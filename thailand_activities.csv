@@ -1,0 +1,21 @@
+title;description;location;country;category;typical_duration_minutes;average_cost;tags;is_popular;recommended_time
+Grand Palace;Historic royal residence with stunning architecture;Bangkok;Thailand;Landmark;180;15.0;palace,history,architecture;true;08:00
+Wat Arun;Iconic temple with intricate porcelain decoration;Bangkok;Thailand;Religious;90;5.0;temple,architecture,view;true;16:00
+Chatuchak Market;World's largest weekend market;Bangkok;Thailand;Shopping;240;0.0;market,shopping,food;true;09:00
+Ayutthaya Historical Park;Ancient capital with temple ruins;Ayutthaya;Thailand;Landmark;240;10.0;ruins,history,architecture;true;08:00
+Phi Phi Islands;Stunning islands with crystal clear waters;Krabi;Thailand;Natural;360;50.0;island,beach,snorkeling;true;09:00
+Wat Phra Singh;Most revered temple in Chiang Mai;Chiang Mai;Thailand;Religious;90;0.0;temple,history,culture;true;08:00
+Elephant Nature Park;Ethical elephant sanctuary;Chiang Mai;Thailand;Experience;360;80.0;elephant,wildlife,conservation;true;08:00
+Railay Beach;Secluded beach accessible only by boat;Krabi;Thailand;Beach;240;0.0;beach,climbing,relaxation;true;10:00
+Floating Markets;Traditional markets on waterways;Damnoen Saduak;Thailand;Cultural;180;0.0;market,culture,food;true;07:00
+Wat Rong Khun;White temple with contemporary art;Chiang Rai;Thailand;Religious;120;5.0;temple,art,architecture;true;09:00
+Khao Sok National Park;Ancient rainforest with lake;Surat Thani;Thailand;Natural;480;30.0;jungle,wildlife,nature;true;08:00
+Pai Canyon;Scenic canyon with hiking trails;Pai;Thailand;Natural;120;0.0;canyon,hiking,view;true;16:00
+Wat Phra Kaew;Temple of the Emerald Buddha;Bangkok;Thailand;Religious;120;10.0;temple,history,culture;true;09:00
+Koh Tao;Popular diving destination;Koh Tao;Thailand;Beach;360;40.0;diving,beach,water;true;09:00
+Doi Suthep;Mountain temple with city views;Chiang Mai;Thailand;Religious;120;5.0;temple,view,history;true;08:00
+Koh Lanta;Relaxed island with long beaches;Krabi;Thailand;Beach;240;0.0;beach,island,relaxation;true;10:00
+Ancient City;World's largest outdoor museum;Samut Prakan;Thailand;Cultural;360;15.0;museum,history,architecture;true;09:00
+Koh Samui;Popular island with luxury resorts;Koh Samui;Thailand;Beach;240;0.0;beach,island,luxury;true;10:00
+Wat Phra That Doi Kham;Temple with giant Buddha statue;Chiang Mai;Thailand;Religious;90;0.0;temple,buddha,view;true;08:00
+Thai Cooking Class;Learn to cook traditional dishes;Bangkok;Thailand;Cultural;180;30.0;cooking,food,culture;true;10:00 

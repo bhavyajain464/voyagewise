@@ -1,0 +1,21 @@
+title;description;location;country;category;typical_duration_minutes;average_cost;tags;is_popular;recommended_time
+Eiffel Tower;Iconic Parisian landmark offering panoramic views of the city;Paris;France;Landmark;120;25.0;monument,architecture,view;true;14:00
+Louvre Museum;World's largest art museum housing the Mona Lisa;Paris;France;Museum;180;17.0;art,history,culture;true;10:00
+Central Park;Iconic urban park with lakes, gardens, and walking trails;New York;USA;Park;240;0.0;nature,outdoor,recreation;true;09:00
+Times Square;Vibrant commercial intersection known for its bright lights;New York;USA;Landmark;60;0.0;shopping,entertainment,nightlife;true;20:00
+Colosseum;Ancient Roman amphitheater and historical landmark;Rome;Italy;Landmark;90;16.0;history,architecture,ancient;true;09:30
+Vatican Museums;Extensive collection of art and historical artifacts;Vatican City;Vatican City;Museum;240;17.0;art,religion,history;true;09:00
+Shibuya Crossing;World's busiest pedestrian crossing;Tokyo;Japan;Landmark;30;0.0;urban,shopping,entertainment;true;19:00
+Senso-ji Temple;Tokyo's oldest and most significant Buddhist temple;Tokyo;Japan;Religious;90;0.0;temple,religion,culture;true;08:00
+Sydney Opera House;Iconic performing arts venue with unique architecture;Sydney;Australia;Landmark;90;40.0;architecture,performing arts,view;true;10:00
+Bondi Beach;Popular beach known for surfing and coastal walks;Sydney;Australia;Beach;180;0.0;beach,surfing,outdoor;true;11:00
+Machu Picchu;Ancient Incan citadel in the Andes mountains;Cusco;Peru;Landmark;240;70.0;ancient,history,architecture;true;06:00
+Sagrada Familia;Unfinished masterpiece by architect Antoni Gaudí;Barcelona;Spain;Religious;120;26.0;architecture,church,art;true;09:00
+Grand Bazaar;One of the world's oldest and largest covered markets;Istanbul;Turkey;Shopping;180;0.0;shopping,market,culture;true;10:00
+Blue Mosque;Historic mosque known for its blue-tiled interior;Istanbul;Turkey;Religious;60;0.0;mosque,architecture,religion;true;09:00
+Petra;Ancient city carved into rose-red sandstone cliffs;Petra;Jordan;Landmark;360;70.0;ancient,history,architecture;true;07:00
+Dead Sea;Salty lake where you can float effortlessly;Dead Sea;Jordan;Natural;180;0.0;nature,swimming,relaxation;true;10:00
+Great Wall of China;Ancient fortification stretching across northern China;Beijing;China;Landmark;240;40.0;history,architecture,ancient;true;08:00
+Forbidden City;Imperial palace complex in the heart of Beijing;Beijing;China;Landmark;180;15.0;palace,history,architecture;true;09:00
+Table Mountain;Flat-topped mountain with panoramic views;Cape Town;South Africa;Natural;240;25.0;mountain,hiking,view;true;08:00
+Robben Island;Former prison where Nelson Mandela was held;Cape Town;South Africa;Museum;240;30.0;history,politics,museum;true;09:00 

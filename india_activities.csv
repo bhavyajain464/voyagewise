@@ -1,0 +1,21 @@
+title;description;location;country;category;typical_duration_minutes;average_cost;tags;is_popular;recommended_time
+Taj Mahal;Iconic white marble mausoleum and UNESCO World Heritage Site;Agra;India;Landmark;180;40.0;monument,architecture,history;true;06:00
+Red Fort;Historic fort complex and former residence of Mughal emperors;Delhi;India;Landmark;120;10.0;fort,history,architecture;true;09:00
+Golden Temple;Sacred Sikh gurdwara with golden dome and holy pool;Amritsar;India;Religious;90;0.0;temple,spiritual,culture;true;05:00
+Hawa Mahal;Palace of Winds with unique honeycomb facade;Jaipur;India;Landmark;60;5.0;palace,architecture,history;true;09:00
+Meenakshi Temple;Ancient Hindu temple with colorful gopurams;Madurai;India;Religious;120;0.0;temple,architecture,culture;true;06:00
+Gateway of India;Historic arch monument overlooking Arabian Sea;Mumbai;India;Landmark;60;0.0;monument,architecture,view;true;16:00
+Varanasi Ghats;Sacred riverfront steps for spiritual rituals;Varanasi;India;Religious;180;0.0;spiritual,culture,ritual;true;05:00
+Hampi Ruins;Ancient ruins of Vijayanagara Empire;Hampi;India;Landmark;240;10.0;ruins,history,architecture;true;08:00
+Kerala Backwaters;Scenic network of lagoons and canals;Alleppey;India;Natural;240;50.0;boat,nature,scenic;true;09:00
+Ellora Caves;Ancient rock-cut cave temples;Aurangabad;India;Landmark;180;10.0;caves,architecture,history;true;09:00
+Khajuraho Temples;Famous for intricate erotic sculptures;Khajuraho;India;Religious;120;10.0;temple,sculpture,history;true;08:00
+Rann of Kutch;White salt desert with unique landscape;Kutch;India;Natural;180;0.0;desert,nature,photography;true;16:00
+Mysore Palace;Royal palace with illuminated facade;Mysore;India;Landmark;120;20.0;palace,architecture,royal;true;19:00
+Ajanta Caves;Ancient Buddhist cave paintings;Aurangabad;India;Landmark;180;10.0;caves,art,history;true;09:00
+Jaisalmer Fort;Living fort with shops and hotels;Jaisalmer;India;Landmark;120;0.0;fort,architecture,culture;true;08:00
+Kerala Kathakali;Traditional dance-drama performance;Kochi;India;Cultural;120;20.0;dance,culture,performance;true;18:00
+Darjeeling Toy Train;Scenic mountain railway ride;Darjeeling;India;Experience;180;30.0;train,scenic,mountain;true;10:00
+Rishikesh Yoga;Yoga and meditation by the Ganges;Rishikesh;India;Wellness;120;15.0;yoga,meditation,spiritual;true;06:00
+Goa Beaches;Popular beach destination;Goa;India;Beach;240;0.0;beach,relaxation,water;true;10:00
+Kerala Ayurveda;Traditional wellness treatments;Kerala;India;Wellness;120;40.0;ayurveda,wellness,spa;true;10:00 
